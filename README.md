@@ -29,5 +29,5 @@ REST API do zarządzania bazą koktajli oraz składników, stworzone w oparciu o
 
 1. **Sklonuj repozytorium:**
    ```bash
-   git clone <https://github.com/Bronco07/Cocktail-management-api>
-   cd cocktail_project
+   git clone [https://github.com/Bronco07/Cocktail-management-api.git](https://github.com/Bronco07/Cocktail-management-api.git)
+   cd Cocktail-management-api
