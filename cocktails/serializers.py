@@ -19,11 +19,13 @@ class CocktailIngredientReadSerializer(serializers.ModelSerializer):
 
 
 class CocktailIngredientWriteSerializer(serializers.Serializer):
-    ingredient_id = serializers.IntegerField()
+    ingredient = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
     amount = serializers.CharField(max_length=50)
 
 
 class CocktailSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+
     ingredients = CocktailIngredientReadSerializer(
         source='recipe_ingredients', 
         many=True, 
@@ -38,7 +40,10 @@ class CocktailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cocktail
-        fields = ['id', 'name', 'category', 'instructions', 'ingredients', 'ingredients_input', 'created_at']
+        fields = [
+            'id', 'name', 'category', 'instructions', 
+            'author', 'ingredients', 'ingredients_input', 'created_at'
+        ]
 
     def create(self, validated_data):
         ingredients_data = validated_data.pop('ingredients_input', [])
@@ -48,7 +53,7 @@ class CocktailSerializer(serializers.ModelSerializer):
         for item in ingredients_data:
             CocktailIngredient.objects.create(
                 cocktail=cocktail,
-                ingredient_id=item['ingredient_id'],
+                ingredient=item['ingredient'], 
                 amount=item['amount']
             )
 
@@ -67,7 +72,7 @@ class CocktailSerializer(serializers.ModelSerializer):
             for item in ingredients_data:
                 CocktailIngredient.objects.create(
                     cocktail=instance,
-                    ingredient_id=item['ingredient_id'],
+                    ingredient=item['ingredient'],
                     amount=item['amount']
                 )
 
